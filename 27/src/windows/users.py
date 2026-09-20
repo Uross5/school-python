@@ -1,11 +1,20 @@
 import tkinter as tk
+from src.core.database import connect_to_db
 
 
 def show_users_window(window):
 
-    users=["John","Michael","Lewis"]
-    user_list=tk.Listbox(window)
-    user_list.pack(side="left",fill="y")
+    listbox = tk.Listbox(window)
+    listbox.pack(side="left", fill="y")
+
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    query = "SELECT name FROM users"
+    cursor.execute(query)
+    users = cursor.fetchall()
+    cursor.close()
+    connection.close()
 
     for user in users:
-        user_list.insert(tk.END,user)
+        listbox.insert(tk.END,user[0])
+

@@ -2,6 +2,7 @@ import tkinter as tk
 from src.components.navigation import show_navigation,switch_navigation_window
 from src.components.body_frame import show_body_frame
 
+
 def init():
     window=tk.Tk()
     window.geometry("500x500")
