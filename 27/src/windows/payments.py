@@ -1,9 +1,21 @@
 import tkinter as tk
+from src.core.database import connect_to_db
+
 
 def show_payment_window(window):
-    payments=["John, 500, 11.11.2025","Steve, 1100, 03.12.2012","Steph, 5000,10.10.2021"]
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    query="SELECT * FROM payments"
+    cursor.execute(query)
+    payments = cursor.fetchall()
+    cursor.close()
+    connection.close()
 
     listbox=tk.Listbox(window)
-    listbox.pack(side="left",fill="y")
+    listbox.pack(side="left",fill="both",expand=True)
     for payment in payments:
-        listbox.insert(tk.END,payment)
+        payment_id, user_id, amount, created_at = payment
+
+        listbox.insert(tk.END,f"ID: {payment_id}, User ID: {user_id}, "
+            f"Amount: ${amount}, Date: {created_at.strftime('%d.%m.%Y')}"
+        )

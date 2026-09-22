@@ -2,6 +2,7 @@ import tkinter as tk
 from src.windows.users import show_users_window
 from src.windows.payments import show_payment_window
 from src.windows.add_user import show_add_user_window
+from src.windows.add_payments import show_add_payments_window
 
 def switch_navigation_window(event,content):
     listbox=event.widget
@@ -20,6 +21,10 @@ def switch_navigation_window(event,content):
         show_users_window(content)
     elif name.lower()=="adding_user":
         show_add_user_window(content)
+    elif name.lower()=="adding payments":
+        show_add_payments_window(content)
+
+
 
 
 def show_navigation (window):
