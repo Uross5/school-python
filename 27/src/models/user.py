@@ -16,3 +16,13 @@ def insert_user(username, email, dob):
     finally:
         cursor.close()
         connection.close()
+
+def get_all_users():
+    connection = connect_to_db()
+    cursor=connection.cursor()
+    query = "SELECT name FROM users"
+    cursor.execute(query)
+    users = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return users

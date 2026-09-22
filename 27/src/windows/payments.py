@@ -1,16 +1,10 @@
 import tkinter as tk
 
-from src.core.database import connect_to_db
+from src.models.payment import get_all_payments
 
 
 def show_payment_window(window):
-    connection = connect_to_db()
-    cursor = connection.cursor()
-    query = "SELECT * FROM payments"
-    cursor.execute(query)
-    payments = cursor.fetchall()
-    cursor.close()
-    connection.close()
+    payments = get_all_payments()
 
     listbox = tk.Listbox(window)
     listbox.pack(side="left", fill="both", expand=True)

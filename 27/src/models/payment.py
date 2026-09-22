@@ -17,3 +17,13 @@ def insert_payment(user_id, amount, created_at):
     finally:
         cursor.close()
         connection.close()
+
+def get_all_payments():
+    connection = connect_to_db()
+    cursor = connection.cursor()
+    query="SELECT * FROM payments"
+    cursor.execute(query)
+    payments = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return payments
