@@ -7,44 +7,67 @@ import pymysql
 from src.models.payment import insert_payment
 
 
-def save_payments(user_id_entry, amount_entry, created_at_entry):
-    user_id = user_id_entry.get().strip()
-    amount = amount_entry.get().strip()
-    created_at = created_at_entry.get().strip()
-
+def validate_required_fields(user_id, amount, created_at):
+    user_id = user_id.strip()
+    amount = amount.strip()
+    created_at = created_at.strip()
     if user_id == "" or amount == "" or created_at == "":
-        messagebox.showerror("Error", "All fields are required")
-        return
-    elif not user_id.isdigit():
-        messagebox.showerror("Error", "User ID must be digits")
-        return
+        raise ValueError("All fields are required")
 
+
+def validate_user_id(user_id):
+    user_id = user_id.strip()
+    if not user_id.isdigit():
+        raise ValueError("User ID must be digits")
     user_id = int(user_id)
+    if user_id <= 0:
+        raise ValueError("User ID must be greater than 0")
+    return user_id
 
-    if (user_id) <= 0:
-        messagebox.showerror("Error", "User ID must be greater than 0")
-        return
 
+def validate_amount(amount):
+    amount = amount.strip()
     try:
         amount = float(amount)
-        if amount <= 0:
-            messagebox.showerror("Error", "Amount must be greater than 0")
-            return
     except ValueError:
-        messagebox.showerror("Error", "Amount must be a number")
-        return
+        raise ValueError("Amount must be a number")
+    if amount <= 0:
+        raise ValueError("Amount must be greater than 0")
+    return amount
 
+
+def validate_created_at(created_at):
+    created_at = created_at.strip()
     try:
         created_at = datetime.strptime(created_at, "%d.%m.%Y").date()
     except ValueError:
-        messagebox.showerror("Error", "Date must be in DD.MM.YYYY")
+        raise ValueError("Date must be in DD.MM.YYYY")
+    return created_at
+
+
+def clear_payment_fields(user_id_entry, amount_entry, created_at_entry):
+    user_id_entry.delete(0, tk.END)
+    amount_entry.delete(0, tk.END)
+    created_at_entry.delete(0, tk.END)
+
+
+def save_payments(user_id_entry, amount_entry, created_at_entry):
+    user_id = user_id_entry.get()
+    amount = amount_entry.get()
+    created_at = created_at_entry.get()
+
+    try:
+        validate_required_fields(user_id, amount, created_at)
+        user_id = validate_user_id(user_id)
+        amount = validate_amount(amount)
+        created_at = validate_created_at(created_at)
+    except ValueError as error:
+        messagebox.showerror("Error", str(error))
         return
 
     try:
         insert_payment(user_id, amount, created_at)
-        user_id_entry.delete(0, tk.END)
-        amount_entry.delete(0, tk.END)
-        created_at_entry.delete(0, tk.END)
+        clear_payment_fields(user_id_entry, amount_entry, created_at_entry)
         messagebox.showinfo("Success", "Payment has been added successfully")
     except pymysql.err.IntegrityError:
         messagebox.showerror("Error", "User with this ID does not exist")

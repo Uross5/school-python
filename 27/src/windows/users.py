@@ -1,9 +1,9 @@
 import tkinter as tk
+
 from src.core.database import connect_to_db
 
 
 def show_users_window(window):
-
     listbox = tk.Listbox(window)
     listbox.pack(side="left", fill="y")
 
@@ -16,5 +16,4 @@ def show_users_window(window):
     connection.close()
 
     for user in users:
-        listbox.insert(tk.END,user[0])
-
+        listbox.insert(tk.END, user[0])

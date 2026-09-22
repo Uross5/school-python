@@ -34,6 +34,6 @@ def show_navigation (window):
     navigation.pack(side="left",fill="y",padx=5)
 
     for item in nav_item:
-        navigation.insert(tk.END, item)
+        navigation.insert(tk.END, item.capitalize())
 
     return navigation

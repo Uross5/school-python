@@ -1,4 +1,5 @@
 import os
+
 import pymysql
 from dotenv import load_dotenv
 
@@ -15,4 +16,3 @@ def connect_to_db():
     )
 
     return connection
-
